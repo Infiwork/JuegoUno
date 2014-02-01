@@ -43,9 +43,6 @@ public class Robot {
 	
 	private Vector3 touchpoint = new Vector3();
 	
-	
-	
-	
 	public Robot(float x, float y, float rotation, AssetManager manager){
 		//propiedades robot
 		
@@ -110,8 +107,7 @@ public class Robot {
 		if(getRobotTouched()){
 			
 		}
-		else{
-			//Movimiento constante
+		else{ // ESTADO 2 - Caminar
 			position.y+=(speedY*deltaTime);
 			position.x+=(speedX*deltaTime);
 			
@@ -149,7 +145,7 @@ public class Robot {
 	public void explosionCountDown(float delta){
 		countDown-=delta;
 		countTemp+=delta;
-		if(countDown<=7){
+		if(countDown<=7){ // Estado de alerta 
 			//System.out.println("if countTemp "+countTemp+" > counDown "+ countDown + " /diez " + (countDown));
 			if(countTemp > (countDown/5)){
 				//System.out.println("sonido");
@@ -157,7 +153,9 @@ public class Robot {
 				this.robotAlert = true;
 				countTemp=-.2f;
 			}
-			if(countDown<=0) robotExplosion = true;
+			if(countTemp >= 0) this.robotAlert = false;
+			
+			if(countDown <= 0) this.robotExplosion = true;
 		}	
 	}
 
@@ -264,7 +262,7 @@ public class Robot {
 		alertExplosion.play(1.0f);
 	}
 	
-	public void soundExplsionRobot(){
+	public void soundExplosionRobot(){
 		destroyRobot.play(1.0f);
 	}
 }

@@ -21,34 +21,34 @@ public class Level {
 	ArrayList<Robot> robots;
 	
 	//Variables
-	boolean GameOver=false;
-	float time = 0;
+	public boolean GameOver = false;
+	public boolean gameExplosion = false;
+	public boolean gameTeleport = false;
+	public float time = 0;
+	public int robotExploited;
+	public int robotTeleport;
 	
 	//Assets
 	AssetManager manager;
 	Music backgroundGame;
 	
 	public Level(AssetManager manager){
-		long time_start, time_end;
-        time_start = System.currentTimeMillis();
 		robots = new ArrayList<Robot>();
-		time_end = System.currentTimeMillis();
-        System.out.println("Tiempo total "+ ( time_end - time_start ) +" milliseconds");
 		tele = new Teleport(manager);
 		selectedTemp = new Stack<Integer>();
 		this.manager = manager;
 		musicBackgroundGame();
-		
 	}
 	
 	public void render(Camera camera, SpriteBatch batch){
-		time += Gdx.graphics.getDeltaTime();
+		long time_start, time_end;
+        time_start = System.currentTimeMillis();
+        time += Gdx.graphics.getDeltaTime();
 		tele.getSprite().draw(batch);
 		
 		if(((int) time)%5==0)
 			if(robots.size()<5) respawnRobots();
 		
-		// Codigo para tocar solo un robot
 		 for (int i = 0; i< robots.size() ; i++){
 			 	robots.get(i).live(camera);
 			 	batch.draw(robots.get(i).getFrameRun(), robots.get(i).getX(), robots.get(i).getY(), 10, 12);
@@ -61,29 +61,31 @@ public class Level {
 				if(robots.get(i).getRobotTouched()){
 					selectedTemp.push(i);
 				}
-				// Eliminar robot al solarlo cerca del teleporter
+				// Eliminar robot al soltarlo cerca del teleporter
 				if(robots.get(i).getRobotDropped())
 				if(robots.get(i).getPosition().dst(tele.getPosition())<6.5){
-					robots.remove(i);
-					break;
+					gameTeleport = true;
+					robotTeleport = i;
 				}
-				
 				// Mostrar alerta de explosion
-				if(robots.get(i).getRobotAlert()){
-					batch.draw(robots.get(i).getAlertTexture(), robots.get(i).getX()+4, robots.get(i).getY()+4, 2, 2);
-					robots.get(i).setRobotAlert(false);
-				}
-				
+				if(robots.get(i).getRobotAlert())
+					batch.draw(robots.get(i).getAlertTexture(), robots.get(i).getX()+4, robots.get(i).getY()+6, 2, 2);
+			
+				//Explosion por tiempo de robot
 				if(robots.get(i).getRobotExplosion()){
-					robots.get(i).soundExplsionRobot();
-					robots.remove(i);
+					gameExplosion = true;
+					robotExploited = i;
 				}
 		 }
+	
 		 //Se ejecuta solo si existe un grupo de robots seleccionados
 		if(!selectedTemp.empty())
 			robotSelected();
 		
-		
+		if(gameTeleport) robotTeleport(robotTeleport);
+		if(gameExplosion) robotExplosion(robotExploited);
+		time_end = System.currentTimeMillis();
+	        System.out.println("Tiempo total "+ ( time_end - time_start ) +" milliseconds");
 	}
 	
 	public void respawnRobots(){
@@ -95,13 +97,23 @@ public class Level {
 		int x=-1, temp;
 		 while(!selectedTemp.empty()){
 			 temp=selectedTemp.pop();
-			 System.out.println(temp);
 			 if(temp>x){
 				 x=temp;
 			 }
 		 }
 		 robots.get(x).setRobotElected(true);
 		 robots.get(x).soundSelectRobot();
+	}
+	
+	public void robotExplosion(int numberRobot){
+		robots.remove(numberRobot);
+		gameExplosion = false;
+		robots.get(numberRobot).soundExplosionRobot();
+	}
+	
+	public void robotTeleport(int numberRobot){
+		robots.remove(numberRobot);
+		gameTeleport = false;
 	}
 	
 	public void musicBackgroundGame(){
@@ -116,5 +128,6 @@ public class Level {
 		}
 		robots.clear();
 		selectedTemp.clear();
+		backgroundGame.dispose();
 	}
 }
