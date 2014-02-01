@@ -149,7 +149,7 @@ public class Robot {
 			//System.out.println("if countTemp "+countTemp+" > counDown "+ countDown + " /diez " + (countDown));
 			if(countTemp > (countDown/5)){
 				//System.out.println("sonido");
-				soundSelectRobot();
+				soundAlertExplosion();
 				this.robotAlert = true;
 				countTemp=-.2f;
 			}
@@ -255,11 +255,11 @@ public class Robot {
 	}
 	
 	public void soundSelectRobot(){
-		touchRobot.play(1.0f);
+		alertExplosion.play(1.0f);
 	}
 	
 	public void soundAlertExplosion(){
-		alertExplosion.play(1.0f);
+		touchRobot.play(1.0f);
 	}
 	
 	public void soundExplosionRobot(){

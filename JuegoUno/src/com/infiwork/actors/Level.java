@@ -25,6 +25,7 @@ public class Level {
 	public boolean gameExplosion = false;
 	public boolean gameTeleport = false;
 	public float time = 0;
+	public float deltaTime = 0;
 	public int robotExploited;
 	public int robotTeleport;
 	
@@ -43,11 +44,11 @@ public class Level {
 	public void render(Camera camera, SpriteBatch batch){
 		long time_start, time_end;
         time_start = System.currentTimeMillis();
-        time += Gdx.graphics.getDeltaTime();
+        deltaTime = Gdx.graphics.getDeltaTime();
+        time += deltaTime;
 		tele.getSprite().draw(batch);
 		
-		if(((int) time)%5==0)
-			if(robots.size()<5) respawnRobots();
+		if(robots.size()<10) respawnRobots(deltaTime);
 		
 		 for (int i = 0; i< robots.size() ; i++){
 			 	robots.get(i).live(camera);
@@ -63,7 +64,7 @@ public class Level {
 				}
 				// Eliminar robot al soltarlo cerca del teleporter
 				if(robots.get(i).getRobotDropped())
-				if(robots.get(i).getPosition().dst(tele.getPosition())<6.5){
+				if(robots.get(i).getPosition().dst(tele.getPosition())<6.9){
 					gameTeleport = true;
 					robotTeleport = i;
 				}
@@ -85,12 +86,17 @@ public class Level {
 		if(gameTeleport) robotTeleport(robotTeleport);
 		if(gameExplosion) robotExplosion(robotExploited);
 		time_end = System.currentTimeMillis();
-	        System.out.println("Tiempo total "+ ( time_end - time_start ) +" milliseconds");
+	      // System.out.println("Tiempo total "+ ( time_end - time_start ) +" milliseconds");
 	}
-	
-	public void respawnRobots(){
-        robot = new Robot(40,0,MathUtils.random(35, 165), manager);
-		robots.add(robot);
+	float tempTime = 0;
+	public void respawnRobots(float deltaTime){
+		tempTime += deltaTime;
+		if(tempTime >= 2){
+			robot = new Robot(40,0,MathUtils.random(35, 165), manager);
+			robots.add(robot);
+			tempTime=0;
+		}
+        
 	}
 	
 	public void robotSelected(){

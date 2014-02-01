@@ -28,6 +28,7 @@ public class ScreenMenu extends AbstractScreen{
 		
 		if(Gdx.input.justTouched()){
 			game.setScreen(new ScreenGame(game));
+			
 		}
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
@@ -66,8 +67,6 @@ public class ScreenMenu extends AbstractScreen{
 		// TODO Auto-generated method stub
 		batch.dispose();
 		texture.dispose();
-		game.manager.unload("juego.png");
-		System.out.println("enr");
 	}
 
 }
