@@ -129,6 +129,7 @@ public class ScreenLoading extends AbstractScreen {
         Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
         
         if (game.manager.update()) { // Load some, will return true if done loading
+        		//game.manager.finishLoading();
                 game.setScreen(new ScreenMenu(game));
         }
 
@@ -150,7 +151,6 @@ public class ScreenLoading extends AbstractScreen {
     public void hide() {
         // Dispose the loading assets as we no longer need them
         game.manager.unload("data/loading.pack");
-        System.out.println("hola");
     }
 
 	

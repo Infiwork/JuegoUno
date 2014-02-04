@@ -90,9 +90,14 @@ public class Level {
 	}
 	float tempTime = 0;
 	public void respawnRobots(float deltaTime){
+		int tempPlace = 1;
+		tempPlace = MathUtils.random(1, 2);
 		tempTime += deltaTime;
 		if(tempTime >= 2){
-			robot = new Robot(40,0,MathUtils.random(35, 165), manager);
+			if(tempPlace==1)
+			robot = new Robot(35,40,MathUtils.random(205, 335), manager);
+			if(tempPlace==2)
+			robot = new Robot(35,-10,MathUtils.random(35, 165), manager);
 			robots.add(robot);
 			tempTime=0;
 		}

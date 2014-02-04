@@ -45,7 +45,7 @@ public class ScreenGame extends AbstractScreen{
 		
 		level.render(camera, batch);
 		time_end = System.currentTimeMillis();
-        System.out.println("the task has taken "+ ( time_end - time_start ) +" milliseconds");
+        //System.out.println("the task has taken "+ ( time_end - time_start ) +" milliseconds");
 		batch.end();	
 	}
 		
@@ -81,6 +81,7 @@ public class ScreenGame extends AbstractScreen{
         game.manager.unload("robot3.png");
         game.manager.unload("circulo.png");
         game.manager.unload("sprite_robot_azul.png");
+        game.manager.dispose();
         System.out.println("render2");
         level.dispose();
         

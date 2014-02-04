@@ -17,6 +17,7 @@ public class Robot {
 	private float countDown = 15;
 	private float countTemp = 0;
 	private float worldWidth=80, worldHeight=38;
+	private boolean robotCreated = false;
 	private boolean robotTouched = false;
 	private boolean robotElected = false;
 	private boolean robotDropped = false;
@@ -84,7 +85,11 @@ public class Robot {
 				setRobotDropped(true);
 				switchDropped=false;
 			}
-			run();
+			if(robotCreated){
+				run();
+			}
+			else
+				enterToWorld();
 		}
 		
 		x=position.x-origin.x;
@@ -118,6 +123,21 @@ public class Robot {
 			runFrame = runAnimation.getKeyFrame(timeFrames,true);
 		}
 	
+	}
+	
+	public void enterToWorld(){
+		deltaTime = Gdx.graphics.getDeltaTime();
+		if(position.y >= worldHeight)
+			position.y-=speedGlobal*deltaTime;
+		
+		if(position.y <= 0)
+			position.y+=speedGlobal*deltaTime;
+		
+		if(position.y < worldHeight && position.y > 0 )
+			robotCreated = true;
+			
+			timeFrames += (deltaTime/8);
+			runFrame = runAnimation.getKeyFrame(timeFrames,true);
 	}
 	
 	public void createRunAnimation(Texture texture){
