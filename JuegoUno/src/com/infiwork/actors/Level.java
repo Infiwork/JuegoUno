@@ -19,6 +19,7 @@ public class Level {
 	//Datos
 	Stack<Integer> selectedTemp;
 	ArrayList<Robot> robots;
+	ArrayList<Teleport> teles;
 	
 	//Variables
 	public boolean GameOver = false;
@@ -28,6 +29,9 @@ public class Level {
 	public float deltaTime = 0;
 	public int robotExploited;
 	public int robotTeleport;
+	
+	private int COLOR_BLUE = 1;
+	private int COLOR_GREEN = 2;
 	
 	//Assets
 	AssetManager manager;
@@ -73,7 +77,7 @@ public class Level {
 					batch.draw(robots.get(i).getAlertTexture(), robots.get(i).getX()+4, robots.get(i).getY()+6, 2, 2);
 			
 				//Explosion por tiempo de robot
-				if(robots.get(i).getRobotExplosion()){
+				if(robots.get(i).getRobotDestroy()){
 					gameExplosion = true;
 					robotExploited = i;
 				}
@@ -95,9 +99,9 @@ public class Level {
 		tempTime += deltaTime;
 		if(tempTime >= 2){
 			if(tempPlace==1)
-			robot = new Robot(35,40,MathUtils.random(205, 335), manager);
+			robot = new Robot(35,40,MathUtils.random(205, 335), COLOR_BLUE , manager);
 			if(tempPlace==2)
-			robot = new Robot(35,-10,MathUtils.random(35, 165), manager);
+			robot = new Robot(35,-10,MathUtils.random(35, 165), COLOR_GREEN ,manager);
 			robots.add(robot);
 			tempTime=0;
 		}

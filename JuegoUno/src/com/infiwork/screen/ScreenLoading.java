@@ -83,6 +83,8 @@ public class ScreenLoading extends AbstractScreen {
         game.manager.load("circulo.png", Texture.class);
         //game.manager.load("sprite_volando.png", Texture.class);
         game.manager.load("sprite_robot_azul.png", Texture.class);
+        game.manager.load("sprite_robot_verde.png", Texture.class);
+        game.manager.load("sprite_robot_rosa.png", Texture.class);
         game.manager.finishLoading();
         // game.manager.load("data/assets2.pack", TextureAtlas.class);
         // game.manager.load("data/assets3.pack", TextureAtlas.class);

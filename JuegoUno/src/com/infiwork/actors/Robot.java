@@ -17,6 +17,7 @@ public class Robot {
 	private float countDown = 15;
 	private float countTemp = 0;
 	private float worldWidth=80, worldHeight=38;
+	private int color;
 	private boolean robotCreated = false;
 	private boolean robotTouched = false;
 	private boolean robotElected = false;
@@ -25,10 +26,12 @@ public class Robot {
 	private boolean robotExplosion = false;
 	private boolean robotDestroy = false;
 	private boolean robotAlert = false;
+	private boolean robotTeleported = false;
 	
 	private float deltaTime;
 	private float timeFrames = 0;
 	private Vector3 position, origin;
+	private String textureName; 
 	
 	private Animation runAnimation;
 	private Texture runTexture;
@@ -44,7 +47,7 @@ public class Robot {
 	
 	private Vector3 touchpoint = new Vector3();
 	
-	public Robot(float x, float y, float rotation, AssetManager manager){
+	public Robot(float x, float y, float rotation, int color, AssetManager manager){
 		//propiedades robot
 		
 		this.x = x; this.y = y;
@@ -57,8 +60,9 @@ public class Robot {
 		
 		origin = new Vector3(spriteWidth/2,spriteHeight/2,0);
 		position = new Vector3(x+origin.x,y+origin.y,0);
-		
-		createRunAnimation(manager.get("sprite_robot_azul.png", Texture.class));
+	
+		setColor(color);
+		createRunAnimation(manager.get(getTextureName(), Texture.class));
 		
 		alertTexture = manager.get("circulo.png");
 	}
@@ -72,6 +76,11 @@ public class Robot {
 			setRobotTouched(justTouch(touchpoint));	
 		}
 		// <-- Sale a avisar que fue tocado
+		if(robotExplosion){
+			exploitingRobot();
+			this.robotElected = false;
+			this.robotCreated = false;
+		}
 		// --> Regresa si es el unico
 		if(getRobotElected()){ // ESTADO 2 - Robot presionado
 			setRobotElected(Gdx.input.isTouched());
@@ -125,7 +134,7 @@ public class Robot {
 	
 	}
 	
-	public void enterToWorld(){
+	private void enterToWorld(){
 		deltaTime = Gdx.graphics.getDeltaTime();
 		if(position.y >= worldHeight)
 			position.y-=speedGlobal*deltaTime;
@@ -139,8 +148,17 @@ public class Robot {
 			timeFrames += (deltaTime/8);
 			runFrame = runAnimation.getKeyFrame(timeFrames,true);
 	}
+	float timeTemp=0;
+	private void exploitingRobot(){
+		deltaTime = Gdx.graphics.getDeltaTime();
+		timeTemp+=deltaTime;
+		if(timeTemp>=5){
+			this.robotDestroy = true;
+			timeTemp=0;
+		}
+	}
 	
-	public void createRunAnimation(Texture texture){
+	private void createRunAnimation(Texture texture){
 		runTexture = texture;
 		TextureRegion[][] tmp = TextureRegion.split(runTexture,200, 290);
 		runTextureRegion = new TextureRegion[5];
@@ -162,7 +180,7 @@ public class Robot {
 		runTexture.dispose();
 	}
 	
-	public void explosionCountDown(float delta){
+	private void explosionCountDown(float delta){
 		countDown-=delta;
 		countTemp+=delta;
 		if(countDown<=7){ // Estado de alerta 
@@ -183,6 +201,10 @@ public class Robot {
 		return alertTexture;
 	}
 	
+	public int getColor(){
+		return this.color;
+	}
+	
 	public TextureRegion getFrameRun(){
 		return runFrame;
 	}
@@ -193,6 +215,10 @@ public class Robot {
 	
 	public boolean getRobotAlert(){
 		return robotAlert;
+	}
+	
+	public boolean getRobotDestroy(){
+		return robotDestroy;
 	}
 	
 	public boolean getRobotDropped(){
@@ -215,8 +241,8 @@ public class Robot {
 		return rotation;
 	}
 	
-	public TextureRegion getRun(){
-		return runTextureRegion[2];
+	private String getTextureName(){
+		return textureName;
 	}
 	
 	public float getX(){
@@ -237,6 +263,10 @@ public class Robot {
 	
 	public void setRobotAlert(boolean robotAlert){
 		this.robotAlert = robotAlert;
+	}
+	
+	public void setRobotDestroy(boolean robotDestroy){
+		this.robotDestroy = robotDestroy;
 	}
 	
 	public void setRobotDropped(boolean robotDropped){
@@ -264,6 +294,23 @@ public class Robot {
 		speedY = MathUtils.sinDeg(rotation)*speed;
 	}
 
+	private void setColor(int color){
+		switch(color) {
+		case 1:
+			this.color = color;
+			textureName = "sprite_robot_azul.png";
+			break;
+		case 2:
+			this.color = color;
+			textureName = "sprite_robot_verde.png";
+			break;
+		default:
+			this.color = color;
+			textureName = "sprite_robot_azul.png";
+			break;
+		}
+	}
+	
 	public void setX(float x){
 		if(x <= worldWidth && x >= 0)
 		position.x = x;
