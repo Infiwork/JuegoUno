@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Teleport {
 	private float x, y;
+	private int color;
 	private float width=10, height=10;
 	
 	private Texture texture;
@@ -15,8 +16,8 @@ public class Teleport {
 	private Vector3 position;
 	
 	
-	public Teleport(AssetManager manager){
-		x=10; y=10;
+	public Teleport(float x, float y, int color, AssetManager manager){
+		this.x=x; this.y=y;
 		
 		position = new Vector3(x+(width/2),y+(height/2),0);
 		texture = manager.get("circulo.png");
@@ -25,6 +26,10 @@ public class Teleport {
 		//Sprite
 		sprite.setSize(width, height);
 		sprite.setPosition(x, y);
+	}
+	
+	public float getColor(){
+		return color;
 	}
 	
 	public Sprite getSprite(){

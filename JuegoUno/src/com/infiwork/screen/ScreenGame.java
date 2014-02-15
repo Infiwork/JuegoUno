@@ -84,10 +84,7 @@ public class ScreenGame extends AbstractScreen{
         game.manager.unload("sprite_robot_rosa.png");
         game.manager.unload("sprite_robot_verde.png");
         game.manager.dispose();
-        System.out.println("render2");
         level.dispose();
-        
-        
 	}
 
 }

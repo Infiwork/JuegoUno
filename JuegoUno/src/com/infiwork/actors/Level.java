@@ -14,17 +14,21 @@ public class Level {
 	
 	// Objetos
 	Robot robot;
-	Teleport tele;
+	Teleport tele1;
+	Teleport tele2;
 	
 	//Datos
 	Stack<Integer> selectedTemp;
+	Stack<Integer> robotsExploited;
 	ArrayList<Robot> robots;
-	ArrayList<Teleport> teles;
+	//ArrayList<Teleport> tele;
 	
 	//Variables
 	public boolean GameOver = false;
 	public boolean gameExplosion = false;
 	public boolean gameTeleport = false;
+	public boolean gameRobotsExplosion = false;
+	public boolean gameRobotsRender = true;
 	public float time = 0;
 	public float deltaTime = 0;
 	public int robotExploited;
@@ -39,8 +43,10 @@ public class Level {
 	
 	public Level(AssetManager manager){
 		robots = new ArrayList<Robot>();
-		tele = new Teleport(manager);
+		tele1 = new Teleport(0 , 20, COLOR_GREEN, manager);
+		tele2 = new Teleport(70, 20, COLOR_BLUE, manager);
 		selectedTemp = new Stack<Integer>();
+		robotsExploited = new Stack<Integer>();
 		this.manager = manager;
 		musicBackgroundGame();
 	}
@@ -50,15 +56,22 @@ public class Level {
         time_start = System.currentTimeMillis();
         deltaTime = Gdx.graphics.getDeltaTime();
         time += deltaTime;
-		tele.getSprite().draw(batch);
+        tele1.getSprite().draw(batch);
+		tele2.getSprite().draw(batch);
 		
 		if(robots.size()<10) respawnRobots(deltaTime);
+		
 		
 		 for (int i = 0; i< robots.size() ; i++){
 			 	robots.get(i).live(camera);
 			 	batch.draw(robots.get(i).getFrameRun(), robots.get(i).getX(), robots.get(i).getY(), 10, 12);
-				//Codigo de colisiones para los paneles
-				if(robots.get(i).getPosition().dst(tele.getPosition())<=7){
+			 	//Codigo de colisiones para los panel2
+				if(robots.get(i).getPosition().dst(tele1.getPosition())<=7){
+					robots.get(i).collisionX();
+					robots.get(i).collisionY();
+				}
+			 	//Codigo de colisiones para los panel2
+				if(robots.get(i).getPosition().dst(tele2.getPosition())<=7){
 					robots.get(i).collisionX();
 					robots.get(i).collisionY();
 				}
@@ -67,10 +80,15 @@ public class Level {
 					selectedTemp.push(i);
 				}
 				// Eliminar robot al soltarlo cerca del teleporter
-				if(robots.get(i).getRobotDropped())
-				if(robots.get(i).getPosition().dst(tele.getPosition())<6.9){
-					gameTeleport = true;
-					robotTeleport = i;
+				if(robots.get(i).getRobotDropped()){
+					if(robots.get(i).getPosition().dst(tele2.getPosition())<6.9){
+						gameTeleport = true;
+						robotTeleport = i;
+					}
+					if(robots.get(i).getPosition().dst(tele1.getPosition())<6.9){
+						gameTeleport = true;
+						robotTeleport = i;
+					}
 				}
 				// Mostrar alerta de explosion
 				if(robots.get(i).getRobotAlert())
@@ -79,16 +97,15 @@ public class Level {
 				//Explosion por tiempo de robot
 				if(robots.get(i).getRobotDestroy()){
 					gameExplosion = true;
-					robotExploited = i;
+					robotExploited = robotsExploited.push(i);;
 				}
 		 }
 	
 		 //Se ejecuta solo si existe un grupo de robots seleccionados
-		if(!selectedTemp.empty())
-			robotSelected();
+		if(!selectedTemp.empty())robotSelected();
 		
 		if(gameTeleport) robotTeleport(robotTeleport);
-		if(gameExplosion) robotExplosion(robotExploited);
+		if(gameExplosion) robotExplosion();
 		time_end = System.currentTimeMillis();
 	      // System.out.println("Tiempo total "+ ( time_end - time_start ) +" milliseconds");
 	}
@@ -120,15 +137,26 @@ public class Level {
 		 robots.get(x).soundSelectRobot();
 	}
 	
-	public void robotExplosion(int numberRobot){
-		robots.remove(numberRobot);
-		gameExplosion = false;
-		robots.get(numberRobot).soundExplosionRobot();
+	public void robotExplosion(){
+		while(!robotsExploited.empty()){
+			int i = robotsExploited.pop();
+			robots.remove(i);
+			robots.get(i).soundExplosionRobot();
+		}
+		this.gameExplosion = false;
+		robotsExplosion();
+	}
+	
+	public void robotsExplosion(){
+		for (int i = 0; i< robots.size() ; i++){
+			robots.get(i).setRobotExplosion(true);
+		}
+		this.gameRobotsExplosion = false;
 	}
 	
 	public void robotTeleport(int numberRobot){
 		robots.remove(numberRobot);
-		gameTeleport = false;
+		this.gameTeleport = false;
 	}
 	
 	public void musicBackgroundGame(){

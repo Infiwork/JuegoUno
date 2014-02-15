@@ -78,6 +78,7 @@ public class Robot {
 		// <-- Sale a avisar que fue tocado
 		if(robotExplosion){
 			exploitingRobot();
+			this.robotTouched = false;
 			this.robotElected = false;
 			this.robotCreated = false;
 		}
@@ -152,7 +153,7 @@ public class Robot {
 	private void exploitingRobot(){
 		deltaTime = Gdx.graphics.getDeltaTime();
 		timeTemp+=deltaTime;
-		if(timeTemp>=5){
+		if(timeTemp>=2){
 			this.robotDestroy = true;
 			timeTemp=0;
 		}
@@ -275,6 +276,10 @@ public class Robot {
 	
 	public void setRobotElected(boolean robotElected){
 		this.robotElected = robotElected;
+	}
+	
+	public void setRobotExplosion(boolean robotExplosion){
+		this.robotExplosion = robotExplosion;
 	}
 	
 	public void setRobotTouched(boolean robotTouched){
