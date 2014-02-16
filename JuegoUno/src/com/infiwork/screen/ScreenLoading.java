@@ -73,6 +73,13 @@ public class ScreenLoading extends AbstractScreen {
         // Assets for menu
         
         game.manager.load("juego.png", Texture.class);
+        //Assets for DisplayGame
+        game.manager.load("button_pause.png", Texture.class);
+        game.manager.load("gameover_screen.png", Texture.class);
+        game.manager.load("pause_screen.png", Texture.class);
+        game.manager.load("complete_screen.png", Texture.class);
+        game.manager.load("play-on.png", Texture.class);
+        game.manager.load("menu_screen.png", Texture.class);
         //Assets for Game
         game.manager.load("audio/background_game.ogg",Music.class);
         game.manager.load("audio/button.ogg",Sound.class);
@@ -85,7 +92,7 @@ public class ScreenLoading extends AbstractScreen {
         game.manager.load("sprite_robot_azul.png", Texture.class);
         game.manager.load("sprite_robot_verde.png", Texture.class);
         game.manager.load("sprite_robot_rosa.png", Texture.class);
-        game.manager.finishLoading();
+        //game.manager.finishLoading();
         // game.manager.load("data/assets2.pack", TextureAtlas.class);
         // game.manager.load("data/assets3.pack", TextureAtlas.class);
     }
@@ -131,7 +138,7 @@ public class ScreenLoading extends AbstractScreen {
         Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
         
         if (game.manager.update()) { // Load some, will return true if done loading
-        		//game.manager.finishLoading();
+        		game.manager.finishLoading();
                 game.setScreen(new ScreenMenu(game));
         }
 

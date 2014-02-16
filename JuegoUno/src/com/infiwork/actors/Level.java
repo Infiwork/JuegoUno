@@ -82,12 +82,19 @@ public class Level {
 				// Eliminar robot al soltarlo cerca del teleporter
 				if(robots.get(i).getRobotDropped()){
 					if(robots.get(i).getPosition().dst(tele2.getPosition())<6.9){
-						gameTeleport = true;
-						robotTeleport = i;
+						if(tele2.getColor()==robots.get(i).getColor()){
+							gameTeleport = true;
+							robotTeleport = i;
+						}
+						else robots.get(i).setRobotExplosion(true);						
+						
 					}
 					if(robots.get(i).getPosition().dst(tele1.getPosition())<6.9){
-						gameTeleport = true;
-						robotTeleport = i;
+						if(tele1.getColor()==robots.get(i).getColor()){
+							gameTeleport = true;
+							robotTeleport = i;
+						}
+						else robots.get(i).setRobotExplosion(true);
 					}
 				}
 				// Mostrar alerta de explosion
@@ -163,6 +170,14 @@ public class Level {
 		backgroundGame = manager.get("audio/background_game.ogg");
 		backgroundGame.play();
 		backgroundGame.setLooping(true);
+	}
+	
+	public void musicBackgroundPauseOn(){
+		backgroundGame.setVolume(.25f);
+	}
+	
+	public void musicBackgroundPauseOff(){
+		backgroundGame.setVolume(1);
 	}
 	
 	public void dispose(){

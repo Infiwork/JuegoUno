@@ -22,6 +22,7 @@ public class Teleport {
 		position = new Vector3(x+(width/2),y+(height/2),0);
 		texture = manager.get("circulo.png");
 		sprite = new Sprite(texture);
+		setColor(color);
 		
 		//Sprite
 		sprite.setSize(width, height);
@@ -46,5 +47,19 @@ public class Teleport {
 	
 	public Vector3 getPosition(){
 		return position;
+	}
+	
+	public void setColor(int color){
+		switch(color) {
+		case 1:
+			this.color = color;
+			break;
+		case 2:
+			this.color = color;
+			break;
+		default:
+			this.color = color;
+			break;
+		}
 	}
 }
