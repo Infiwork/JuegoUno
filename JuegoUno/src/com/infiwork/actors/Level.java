@@ -27,8 +27,9 @@ public class Level {
 	public boolean GameOver = false;
 	public boolean gameExplosion = false;
 	public boolean gameTeleport = false;
-	public boolean gameRobotsExplosion = false;
+	public boolean gameRobotsExplosion = true;
 	public boolean gameRobotsRender = true;
+	public boolean gameRespawn = true;
 	public float time = 0;
 	public float deltaTime = 0;
 	public int robotExploited;
@@ -59,7 +60,7 @@ public class Level {
         tele1.getSprite().draw(batch);
 		tele2.getSprite().draw(batch);
 		
-		if(robots.size()<10) respawnRobots(deltaTime);
+		if(robots.size()<10 && gameRespawn) respawnRobots(deltaTime);
 		
 		
 		 for (int i = 0; i< robots.size() ; i++){
@@ -79,29 +80,29 @@ public class Level {
 				if(robots.get(i).getRobotTouched()){
 					selectedTemp.push(i);
 				}
-				// Eliminar robot al soltarlo cerca del teleporter
+				// Acciones de robot al soltarlo cerca del teleporter
 				if(robots.get(i).getRobotDropped()){
 					if(robots.get(i).getPosition().dst(tele2.getPosition())<6.9){
-						if(tele2.getColor()==robots.get(i).getColor()){
+						if(tele2.getColor()==robots.get(i).getColor()){ // Teletranportar si es del mismo color
 							gameTeleport = true;
 							robotTeleport = i;
 						}
-						else robots.get(i).setRobotExplosion(true);						
+						else robots.get(i).setRobotExplosion(true);	// De lo contrario elminarlo					
 						
 					}
 					if(robots.get(i).getPosition().dst(tele1.getPosition())<6.9){
-						if(tele1.getColor()==robots.get(i).getColor()){
+						if(tele1.getColor()==robots.get(i).getColor()){ // Teletranportar si es del mismo color
 							gameTeleport = true;
 							robotTeleport = i;
 						}
-						else robots.get(i).setRobotExplosion(true);
+						else robots.get(i).setRobotExplosion(true); // De lo contrario eliminarlo
 					}
 				}
 				// Mostrar alerta de explosion
 				if(robots.get(i).getRobotAlert())
 					batch.draw(robots.get(i).getAlertTexture(), robots.get(i).getX()+4, robots.get(i).getY()+6, 2, 2);
 			
-				//Explosion por tiempo de robot
+				//Explosion si el robot lo indica
 				if(robots.get(i).getRobotDestroy()){
 					gameExplosion = true;
 					robotExploited = robotsExploited.push(i);;
@@ -148,10 +149,15 @@ public class Level {
 		while(!robotsExploited.empty()){
 			int i = robotsExploited.pop();
 			robots.remove(i);
-			robots.get(i).soundExplosionRobot();
+			if(this.gameRobotsExplosion)robots.get(i).soundExplosionRobot();
 		}
 		this.gameExplosion = false;
-		robotsExplosion();
+		this.gameRespawn = false;
+		if(this.gameRobotsExplosion)
+			robotsExplosion();
+		else
+			this.GameOver=true;
+		
 	}
 	
 	public void robotsExplosion(){
@@ -187,5 +193,9 @@ public class Level {
 		robots.clear();
 		selectedTemp.clear();
 		backgroundGame.dispose();
+	}
+	
+	public boolean getGameOver(){
+		return this.GameOver;
 	}
 }

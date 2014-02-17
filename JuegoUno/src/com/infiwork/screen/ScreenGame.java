@@ -24,6 +24,8 @@ public class ScreenGame extends AbstractScreen{
 	TextureRegion screenComplete;
 	Texture buttonPlay;
 	BoundingBox boxPlay;
+	Texture buttonRestar;
+	BoundingBox boxRestar;
 	Texture buttonPause;
 	BoundingBox boxPause;
 	Sprite fondo;
@@ -41,6 +43,7 @@ public class ScreenGame extends AbstractScreen{
 	
 	public ScreenGame(JuegoUno game) {
         super(game);
+        
     }
 	
 	@Override
@@ -61,7 +64,11 @@ public class ScreenGame extends AbstractScreen{
 			fondo.draw(batch);
 			level.render(camera, batch);
 			batch.draw(buttonPause, 75, 40, 5, 5);
-			if(Gdx.input.justTouched()){
+			if(level.getGameOver()){
+				level.musicBackgroundPauseOn();
+				GAME_STATE = GAME_OVER;
+			}
+			if(Gdx.input.justTouched()){ // Controles Play
 				camera.unproject(touchpoint.set(Gdx.input.getX(),Gdx.input.getY(),0));
 				if(boxPause.contains(touchpoint)) {
 					level.musicBackgroundPauseOn();
@@ -70,14 +77,31 @@ public class ScreenGame extends AbstractScreen{
 			}
 			break;
 		case 2: //GAME_OVER
-			
+			batch.draw(screenOver, 0, 0, 80, 45);
+			batch.draw(buttonRestar, 37, 20, 5, 5);
+			if(Gdx.input.justTouched()){ // Controles Pause
+				camera.unproject(touchpoint.set(Gdx.input.getX(),Gdx.input.getY(),0));
+				if(boxRestar.contains(touchpoint)) {
+					level = null;
+					level = new Level(game.manager);
+					GAME_STATE = GAME_PLAY;
+					level.musicBackgroundPauseOff();
+				}
+			}
 			break;
 		case 3: //GAME_PAUSE
 			batch.draw(screenPause, 0, 0, 80, 45);
-			batch.draw(buttonPlay, 37, 20, 5, 5);
-			if(Gdx.input.justTouched()){
+			batch.draw(buttonRestar, 37, 20, 5, 5);
+			batch.draw(buttonPlay, 30, 20, 5, 5);
+			if(Gdx.input.justTouched()){ // Controles Pause
 				camera.unproject(touchpoint.set(Gdx.input.getX(),Gdx.input.getY(),0));
 				if(boxPlay.contains(touchpoint)){
+					GAME_STATE = GAME_PLAY;
+					level.musicBackgroundPauseOff();
+				}
+				if(boxRestar.contains(touchpoint)) {
+					level = null;
+					level = new Level(game.manager);
 					GAME_STATE = GAME_PLAY;
 					level.musicBackgroundPauseOff();
 				}
@@ -106,18 +130,22 @@ public class ScreenGame extends AbstractScreen{
 		batch = new SpriteBatch();
 		
 		level = new Level(game.manager);
-		
+		System.out.println("hola1");
 		textfondo = game.manager.get("escenario.png");
 		textReg =  new TextureRegion(textfondo, 1024, 700);
 		texturePause = game.manager.get("pause_screen.png");
 		screenPause = new TextureRegion(texturePause, 800, 480);
+		textureOver = game.manager.get("gameover_screen.png");
+		screenOver = new TextureRegion(textureOver, 800, 480);
 		buttonPlay = game.manager.get("play-on.png");
-		boxPlay = new BoundingBox(new Vector3(37,20,0), new Vector3(43, 25,0));
+		boxPlay = new BoundingBox(new Vector3(30,20,0), new Vector3(35, 25,0));
+		buttonRestar = game.manager.get("stop-on.png");
+		boxRestar = new BoundingBox(new Vector3(37,20,0), new Vector3(43, 25,0));
 		buttonPause = game.manager.get("button_pause.png");
 		boxPause = new BoundingBox(new Vector3(75,40,0), new Vector3(80, 45,0));
-		
 		fondo = new Sprite(textReg);
 		touchpoint = new Vector3();
+		System.out.println("hola2");
 		
 	}
 
