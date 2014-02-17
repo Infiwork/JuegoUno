@@ -60,7 +60,7 @@ public class ScreenLoading extends AbstractScreen {
         loadingBar = new LoadingBar(anim);
 
         // Or if you only need a static bar, you can do
-        // loadingBar = new Image(atlas.findRegion("loading-bar1"));
+        loadingBar = new Image(atlas.findRegion("loading-bar1"));
 
         // Add all the actors to the stage
         stage.addActor(screenBg);
@@ -139,7 +139,6 @@ public class ScreenLoading extends AbstractScreen {
         Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
         
         if (game.manager.update()) { // Load some, will return true if done loading
-        		game.manager.finishLoading();
                 game.setScreen(new ScreenMenu(game));
         }
 

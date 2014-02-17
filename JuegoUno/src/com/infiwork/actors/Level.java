@@ -120,6 +120,11 @@ public class Level {
 		time_end = System.currentTimeMillis();
 	      // System.out.println("Tiempo total "+ ( time_end - time_start ) +" milliseconds");
 	}
+	
+	public void respawnCore(){
+		
+	}
+	
 	float tempTime = 0;
 	public void respawnRobots(float deltaTime){
 		int tempPlace = 1;

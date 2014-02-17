@@ -107,6 +107,8 @@ public class ScreenGame extends AbstractScreen{
 				}
 			}
 			break;
+		case 4:
+			break;
 		default:
 			break;
 		}

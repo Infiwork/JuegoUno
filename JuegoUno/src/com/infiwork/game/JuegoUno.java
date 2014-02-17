@@ -3,6 +3,7 @@ package com.infiwork.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
 import com.infiwork.screen.ScreenLoading;
+import com.infiwork.screen.ScreenX;
 
 public class JuegoUno extends Game {
 

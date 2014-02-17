@@ -14,7 +14,7 @@ public class Robot {
 	private float x, y, speedX, speedY, rotation;
 	private float speedGlobal = 5f;
 	private float spriteWidth = 10, spriteHeight = 10;
-	private float countDown = 15;
+	private float countDown = 10;
 	private float countTemp = 0;
 	private float worldWidth=80, worldHeight=38;
 	private int color;
@@ -184,7 +184,7 @@ public class Robot {
 	private void explosionCountDown(float delta){
 		countDown-=delta;
 		countTemp+=delta;
-		if(countDown<=7){ // Estado de alerta 
+		if(countDown<=5){ // Estado de alerta 
 			//System.out.println("if countTemp "+countTemp+" > counDown "+ countDown + " /diez " + (countDown));
 			if(countTemp > (countDown/5)){
 				//System.out.println("sonido");
