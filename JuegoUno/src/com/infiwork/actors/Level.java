@@ -6,6 +6,7 @@ import java.util.Stack;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -41,6 +42,7 @@ public class Level {
 	//Assets
 	AssetManager manager;
 	Music backgroundGame;
+	private Sound destroyRobot;
 	
 	public Level(AssetManager manager){
 		robots = new ArrayList<Robot>();
@@ -50,6 +52,7 @@ public class Level {
 		robotsExploited = new Stack<Integer>();
 		this.manager = manager;
 		musicBackgroundGame();
+		destroyRobot = manager.get("audio/ChargedSonicBoomAttack8-Bit.ogg");
 	}
 	
 	public void render(Camera camera, SpriteBatch batch){
@@ -149,8 +152,8 @@ public class Level {
 		while(!robotsExploited.empty()){
 			int i = robotsExploited.pop();
 			robots.remove(i);
-			if(this.gameRobotsExplosion)robots.get(i).soundExplosionRobot();
 		}
+		soundExplosionRobot();
 		this.gameExplosion = false;
 		this.gameRespawn = false;
 		if(this.gameRobotsExplosion)
@@ -197,5 +200,9 @@ public class Level {
 	
 	public boolean getGameOver(){
 		return this.GameOver;
+	}
+	
+	public void soundExplosionRobot(){
+		destroyRobot.play(1.0f);
 	}
 }

@@ -43,7 +43,7 @@ public class Robot {
 	
 	private Sound touchRobot;
 	private Sound alertExplosion;
-	private Sound destroyRobot;
+	
 	
 	private Vector3 touchpoint = new Vector3();
 	
@@ -56,7 +56,7 @@ public class Robot {
 		
 		touchRobot = manager.get("audio/robot_jump.ogg");
 		alertExplosion = manager.get("audio/button.ogg");
-		destroyRobot = manager.get("audio/ChargedSonicBoomAttack8-Bit.ogg");
+		
 		
 		origin = new Vector3(spriteWidth/2,spriteHeight/2,0);
 		position = new Vector3(x+origin.x,y+origin.y,0);
@@ -153,7 +153,7 @@ public class Robot {
 	private void exploitingRobot(){
 		deltaTime = Gdx.graphics.getDeltaTime();
 		timeTemp+=deltaTime;
-		if(timeTemp>=2){
+		if(timeTemp>=1.5){
 			this.robotDestroy = true;
 			timeTemp=0;
 		}
@@ -335,6 +335,6 @@ public class Robot {
 	}
 	
 	public void soundExplosionRobot(){
-		destroyRobot.play(1.0f);
+		
 	}
 }
