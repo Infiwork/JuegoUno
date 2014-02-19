@@ -63,7 +63,7 @@ public class Level {
         tele1.getSprite().draw(batch);
 		tele2.getSprite().draw(batch);
 		
-		if(robots.size()<10 && gameRespawn) respawnRobots(deltaTime);
+		if(gameRespawn) respawnRobots(deltaTime);
 		
 		
 		 for (int i = 0; i< robots.size() ; i++){
@@ -121,20 +121,24 @@ public class Level {
 	      // System.out.println("Tiempo total "+ ( time_end - time_start ) +" milliseconds");
 	}
 	
-	public void respawnCore(){
+	int grupRobots = 1;
+	int contRobots = 0;
+	public void respawnCore(float deltaTime){
 		
 	}
 	
 	float tempTime = 0;
 	public void respawnRobots(float deltaTime){
 		int tempPlace = 1;
+		int tempColor = 1;
 		tempPlace = MathUtils.random(1, 2);
+		tempColor = MathUtils.random(1, 2);
 		tempTime += deltaTime;
-		if(tempTime >= 2){
+		if(tempTime >= .75f){
 			if(tempPlace==1)
-			robot = new Robot(35,40,MathUtils.random(205, 335), COLOR_BLUE , manager);
+			robot = new Robot(35,40,MathUtils.random(205, 335), tempColor , manager);
 			if(tempPlace==2)
-			robot = new Robot(35,-10,MathUtils.random(35, 165), COLOR_GREEN ,manager);
+			robot = new Robot(35,-10,MathUtils.random(35, 165), tempColor ,manager);
 			robots.add(robot);
 			tempTime=0;
 		}

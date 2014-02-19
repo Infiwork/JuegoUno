@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -29,6 +30,7 @@ public class ScreenGame extends AbstractScreen{
 	Texture buttonPause;
 	BoundingBox boxPause;
 	Sprite fondo;
+	BitmapFont text;
 	
 	Level level;
 	
@@ -147,6 +149,11 @@ public class ScreenGame extends AbstractScreen{
 		boxPause = new BoundingBox(new Vector3(75,40,0), new Vector3(80, 45,0));
 		fondo = new Sprite(textReg);
 		touchpoint = new Vector3();
+		//TextureRegion t = new TextureRegion(game.manager.get("arial.png", Texture.class));
+		//BitmapFont b = game.manager.get("arial.fnt",BitmapFont.class);		
+		
+		
+		
 		System.out.println("hola2");
 		
 	}

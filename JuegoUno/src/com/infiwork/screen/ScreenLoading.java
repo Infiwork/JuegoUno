@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -60,7 +61,7 @@ public class ScreenLoading extends AbstractScreen {
         loadingBar = new LoadingBar(anim);
 
         // Or if you only need a static bar, you can do
-        loadingBar = new Image(atlas.findRegion("loading-bar1"));
+        //loadingBar = new Image(atlas.findRegion("loading-bar1"));
 
         // Add all the actors to the stage
         stage.addActor(screenBg);
@@ -89,6 +90,8 @@ public class ScreenLoading extends AbstractScreen {
         game.manager.load("escenario.png", Texture.class);
         game.manager.load("robot3.png", Texture.class);
         game.manager.load("circulo.png", Texture.class);
+        //game.manager.load("arial.fnt", BitmapFont.class);
+        //game.manager.load("arial.png", Texture.class);
         //game.manager.load("sprite_volando.png", Texture.class);
         game.manager.load("sprite_robot_azul.png", Texture.class);
         game.manager.load("sprite_robot_verde.png", Texture.class);
