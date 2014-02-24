@@ -24,20 +24,35 @@ public class Level {
 	ArrayList<Robot> robots;
 	//ArrayList<Teleport> tele;
 	
-	//Variables
+	//Global
+	public int Level = 1;
+	public float time = 0;
+	public float deltaTime = 0;
+	//Estates
 	public boolean GameOver = false;
+	public boolean LevelComplete = false;
 	public boolean gameExplosion = false;
 	public boolean gameTeleport = false;
+	public boolean gameRobotsCreate = true;
 	public boolean gameRobotsExplosion = true;
 	public boolean gameRobotsRender = true;
 	public boolean gameRespawn = true;
-	public float time = 0;
-	public float deltaTime = 0;
+	//Robots 
 	public int robotExploited;
 	public int robotTeleport;
-	
+	//Respawn
+	public int countLevelRobots = 0;
+	public int countInternalLevelRobots = 0;
+	public int totalLevelRobots = 5;
+	private float timeSpanRespawn = 5;
+	private int positionRespawn;
+	private int percentComplete;
+	private float tempRespawnTime = 0;
+	//Constantes
 	private int COLOR_BLUE = 1;
 	private int COLOR_GREEN = 2;
+	private int POS_TOP = 1;
+	private int POS_BOTTOM = 2;
 	
 	//Assets
 	AssetManager manager;
@@ -53,18 +68,19 @@ public class Level {
 		this.manager = manager;
 		musicBackgroundGame();
 		destroyRobot = manager.get("audio/ChargedSonicBoomAttack8-Bit.ogg");
+		
 	}
 	
 	public void render(Camera camera, SpriteBatch batch){
-		long time_start, time_end;
-        time_start = System.currentTimeMillis();
+		//long time_start, time_end;
+        //time_start = System.currentTimeMillis();
         deltaTime = Gdx.graphics.getDeltaTime();
         time += deltaTime;
         tele1.getSprite().draw(batch);
 		tele2.getSprite().draw(batch);
 		
-		if(gameRespawn) respawnRobots(deltaTime);
-		
+		if(countLevelRobots==totalLevelRobots)nextLevel();
+		if(gameRespawn) respawnCore(deltaTime);
 		
 		 for (int i = 0; i< robots.size() ; i++){
 			 	robots.get(i).live(camera);
@@ -117,32 +133,33 @@ public class Level {
 		
 		if(gameTeleport) robotTeleport(robotTeleport);
 		if(gameExplosion) robotExplosion();
-		time_end = System.currentTimeMillis();
+		//time_end = System.currentTimeMillis();
 	      // System.out.println("Tiempo total "+ ( time_end - time_start ) +" milliseconds");
 	}
 	
-	int grupRobots = 1;
-	int contRobots = 0;
 	public void respawnCore(float deltaTime){
-		
+		tempRespawnTime += deltaTime;
+		if(tempRespawnTime >= timeSpanRespawn){
+			countInternalLevelRobots++;
+			tempRespawnTime = 0;
+			respawnRobots();
+			timeSpanRespawn = ((MathUtils.random(50, 150))*.01f);
+		}
+		if(countInternalLevelRobots==totalLevelRobots) {
+			gameRespawn=false;
+		}
 	}
 	
-	float tempTime = 0;
-	public void respawnRobots(float deltaTime){
-		int tempPlace = 1;
-		int tempColor = 1;
-		tempPlace = MathUtils.random(1, 2);
+	public void respawnRobots(){
+		int tempPos;
+		int tempColor;
+
+		tempPos = MathUtils.random(1, 2);
+		positionRespawn = getPositionRespawnRobots(tempPos);
 		tempColor = MathUtils.random(1, 2);
-		tempTime += deltaTime;
-		if(tempTime >= .75f){
-			if(tempPlace==1)
-			robot = new Robot(35,40,MathUtils.random(205, 335), tempColor , manager);
-			if(tempPlace==2)
-			robot = new Robot(35,-10,MathUtils.random(35, 165), tempColor ,manager);
-			robots.add(robot);
-			tempTime=0;
-		}
-        
+		//robot = new Robot(35,40,MathUtils.random(205, 335), tempColor , manager);
+		robot = new Robot(35, positionRespawn ,MathUtils.random(35, 165), tempColor ,manager);
+		robots.add(robot);
 	}
 	
 	public void robotSelected(){
@@ -181,6 +198,7 @@ public class Level {
 	
 	public void robotTeleport(int numberRobot){
 		robots.remove(numberRobot);
+		countLevelRobots++;
 		this.gameTeleport = false;
 	}
 	
@@ -198,6 +216,15 @@ public class Level {
 		backgroundGame.setVolume(1);
 	}
 	
+	public void nextLevel(){
+		Level++;
+		totalLevelRobots = 5 + (Level*Level);
+		countLevelRobots = 0;
+		countInternalLevelRobots = 0;
+		timeSpanRespawn = 5;
+		gameRespawn = true;
+	}
+	
 	public void dispose(){
 		for (int i = 0; i< robots.size() ; i++){
 			robots.get(i).disposeAssets();
@@ -211,7 +238,41 @@ public class Level {
 		return this.GameOver;
 	}
 	
+	public int getLevel(){
+		return this.Level;
+	}
+	
+	public int getCountLevelRobts(){
+		return this.countLevelRobots;
+	}
+	
+	public int getTotalLevelRobots(){
+		return this.totalLevelRobots;
+	}
+	
+	public int getPercentLevelRobots(){
+		this.percentComplete = (100*countLevelRobots)/totalLevelRobots;
+		return percentComplete;
+	}
+	
+	private int getPositionRespawnRobots(int value){
+		int position = 0;
+		switch (value) {
+		case 1:
+			position = 40;
+			break;
+		case 2:
+			position = -10;
+			break;
+		default:
+			position = 40;
+			break;
+		}
+		return position;
+	}
+	
 	public void soundExplosionRobot(){
 		destroyRobot.play(1.0f);
 	}
+	
 }

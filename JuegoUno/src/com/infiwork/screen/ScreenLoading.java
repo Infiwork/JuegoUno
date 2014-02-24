@@ -82,6 +82,8 @@ public class ScreenLoading extends AbstractScreen {
         game.manager.load("play-on.png", Texture.class);
         game.manager.load("stop-on.png", Texture.class);
         game.manager.load("menu_screen.png", Texture.class);
+        game.manager.load("base.png", Texture.class);
+        game.manager.load("barra.png", Texture.class);
         //Assets for Game
         game.manager.load("audio/background_game.ogg",Music.class);
         game.manager.load("audio/button.ogg",Sound.class);
@@ -90,7 +92,7 @@ public class ScreenLoading extends AbstractScreen {
         game.manager.load("escenario.png", Texture.class);
         game.manager.load("robot3.png", Texture.class);
         game.manager.load("circulo.png", Texture.class);
-        //game.manager.load("arial.fnt", BitmapFont.class);
+        game.manager.load("arial.fnt", BitmapFont.class);
         //game.manager.load("arial.png", Texture.class);
         //game.manager.load("sprite_volando.png", Texture.class);
         game.manager.load("sprite_robot_azul.png", Texture.class);

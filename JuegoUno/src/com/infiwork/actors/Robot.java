@@ -16,6 +16,7 @@ public class Robot {
 	private float spriteWidth = 10, spriteHeight = 10;
 	private float countDown = 10;
 	private float countTemp = 0;
+	private float worldWidthStart=10, worldWidthEnd=70; 
 	private float worldWidth=80, worldHeight=38;
 	private int color;
 	private boolean robotCreated = false;

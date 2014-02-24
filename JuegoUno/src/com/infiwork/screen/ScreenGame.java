@@ -31,7 +31,7 @@ public class ScreenGame extends AbstractScreen{
 	BoundingBox boxPause;
 	Sprite fondo;
 	BitmapFont text;
-	
+	Texture displayBar, displayBase;
 	Level level;
 	
 	private OrthographicCamera camera;
@@ -42,6 +42,7 @@ public class ScreenGame extends AbstractScreen{
 	private int GAME_PLAY = 1;
 	private int GAME_OVER = 2;
 	private int GAME_PAUSE = 3;
+	private int GAME_COMPLETE = 4;
 	
 	public ScreenGame(JuegoUno game) {
         super(game);
@@ -66,6 +67,8 @@ public class ScreenGame extends AbstractScreen{
 			fondo.draw(batch);
 			level.render(camera, batch);
 			batch.draw(buttonPause, 75, 40, 5, 5);
+			text.draw(batch, " "+level.getPercentLevelRobots()+"%", 55, 42);
+			text.draw(batch, "Level:"+level.getLevel(), 10, 42);
 			if(level.getGameOver()){
 				level.musicBackgroundPauseOn();
 				GAME_STATE = GAME_OVER;
@@ -109,7 +112,18 @@ public class ScreenGame extends AbstractScreen{
 				}
 			}
 			break;
-		case 4:
+		case 4: // GAME_COMPLETE
+			batch.draw(screenComplete, 0, 0, 80, 45);
+			batch.draw(buttonRestar, 37, 20, 5, 5);
+			if(Gdx.input.justTouched()){ // Controles Pause
+				camera.unproject(touchpoint.set(Gdx.input.getX(),Gdx.input.getY(),0));
+				if(boxRestar.contains(touchpoint)) {
+					level = null;
+					level = new Level(game.manager);
+					GAME_STATE = GAME_PLAY;
+					level.musicBackgroundPauseOff();
+				}
+			}
 			break;
 		default:
 			break;
@@ -141,6 +155,8 @@ public class ScreenGame extends AbstractScreen{
 		screenPause = new TextureRegion(texturePause, 800, 480);
 		textureOver = game.manager.get("gameover_screen.png");
 		screenOver = new TextureRegion(textureOver, 800, 480);
+		textureComplete = game.manager.get("gameover_screen.png");
+		screenComplete = new TextureRegion(textureOver, 800, 480);
 		buttonPlay = game.manager.get("play-on.png");
 		boxPlay = new BoundingBox(new Vector3(30,20,0), new Vector3(35, 25,0));
 		buttonRestar = game.manager.get("stop-on.png");
@@ -148,7 +164,11 @@ public class ScreenGame extends AbstractScreen{
 		buttonPause = game.manager.get("button_pause.png");
 		boxPause = new BoundingBox(new Vector3(75,40,0), new Vector3(80, 45,0));
 		fondo = new Sprite(textReg);
+		displayBar = game.manager.get("barra.png");
+		displayBase = game.manager.get("base.png");
 		touchpoint = new Vector3();
+		text = game.manager.get("arial.fnt");
+		text.setScale(.2f);
 		//TextureRegion t = new TextureRegion(game.manager.get("arial.png", Texture.class));
 		//BitmapFont b = game.manager.get("arial.fnt",BitmapFont.class);		
 		
