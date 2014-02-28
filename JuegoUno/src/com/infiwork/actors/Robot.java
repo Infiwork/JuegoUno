@@ -65,7 +65,7 @@ public class Robot {
 		setColor(color);
 		createRunAnimation(manager.get(getTextureName(), Texture.class));
 		
-		alertTexture = manager.get("circulo.png");
+		alertTexture = manager.get("alert.png");
 	}
 	
 	public void live(Camera camera){
@@ -139,10 +139,10 @@ public class Robot {
 	private void enterToWorld(){
 		deltaTime = Gdx.graphics.getDeltaTime();
 		if(position.y >= worldHeight)
-			position.y-=speedGlobal*deltaTime;
+			position.y-=(speedGlobal+2)*deltaTime;
 		
 		if(position.y <= 0)
-			position.y+=speedGlobal*deltaTime;
+			position.y+=(speedGlobal+2)*deltaTime;
 		
 		if(position.y < worldHeight && position.y > 0 )
 			robotCreated = true;
