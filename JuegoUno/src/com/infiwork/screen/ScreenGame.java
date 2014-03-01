@@ -37,8 +37,7 @@ public class ScreenGame extends AbstractScreen{
 	private int GAME_COMPLETE = 4;
 	
 	public ScreenGame(JuegoUno game) {
-        super(game);
-        
+        super(game); 
     }
 	
 	@Override
@@ -74,14 +73,16 @@ public class ScreenGame extends AbstractScreen{
 					GAME_STATE = GAME_PAUSE;
 				}
 				if(boxPower1.contains(touchpoint)){
+					if(level.getPowerOneCount()>0)
 					level.setPowerOne(true);
 				}
 				if(boxPower2.contains(touchpoint)){
+					if(level.getPowerTwoCount()>0)
 					level.setPowerTwo(true);
 				}
 				if(boxPower3.contains(touchpoint)){
+					if(level.getPowerThreeCount()>0)
 					level.setPowerThree(true);
-					System.out.println("tres");
 				}
 			}
 			break;

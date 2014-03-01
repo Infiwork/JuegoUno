@@ -96,6 +96,7 @@ public class ScreenLoading extends AbstractScreen {
         game.manager.load("escenario.png", Texture.class);
         game.manager.load("robot3.png", Texture.class);
         game.manager.load("circulo.png", Texture.class);
+        game.manager.load("laser.png", Texture.class);
         game.manager.load("arial.fnt", BitmapFont.class);
         //game.manager.load("arial.png", Texture.class);
         //game.manager.load("sprite_volando.png", Texture.class);

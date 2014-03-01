@@ -41,10 +41,13 @@ public class Level {
 	//Powers
 	public boolean powerOne = false;
 	public float powerOneTime = 0;
+	public int powerOneCount = 1;
 	public boolean powerTwo = false;
 	public float powerTwoTime = 0;
+	public int powerTwoCount = 1;
 	public boolean powerThree = false;
 	public float powerThreeTime = 0;
+	public int powerThreeCount = 1;
 	//Robots 
 	public int robotExploited;
 	public int robotTeleport;
@@ -80,8 +83,7 @@ public class Level {
 		robotsExploited = new Stack<Integer>();
 		this.manager = manager;
 		musicBackgroundGame();
-		destroyRobot = manager.get("audio/ChargedSonicBoomAttack8-Bit.ogg");
-		
+		destroyRobot = manager.get("audio/ChargedSonicBoomAttack8-Bit.ogg");	
 	}
 	
 	public void render(Camera camera, SpriteBatch batch){
@@ -98,6 +100,8 @@ public class Level {
 		 for (int i = 0; i< robots.size() ; i++){
 			 	robots.get(i).live(camera);
 			 	batch.draw(robots.get(i).getFrameRun(), robots.get(i).getX(), robots.get(i).getY(), 10, 12);
+			 	if(robots.get(i).getRobotPower())
+			 	batch.draw(robots.get(i).getPowerTexture(), robots.get(i).getX(), robots.get(i).getY(), 2, 2);
 			 	//Codigo de colisiones para los panel2
 				if(robots.get(i).getPosition().dst(tele1.getPosition())<=7){
 					robots.get(i).collisionX();
@@ -139,7 +143,6 @@ public class Level {
 					gameExplosion = true;
 					robotExploited = robotsExploited.push(i);;
 				}
-				
 		 }
 	
 		 //Se ejecuta solo si existe un grupo de robots seleccionados
@@ -206,19 +209,31 @@ public class Level {
 		return position;
 	}
 	
+	public int getPowerOneCount(){
+		return powerOneCount;
+	}
+	
+	public int getPowerTwoCount(){
+		return powerTwoCount;
+	}
+	public int getPowerThreeCount(){
+		return powerThreeCount;
+	}
+	
 	public void powerOne(float deltaTime){
 		if(powerOneTime == 0){
 			for (int i = 0; i< robots.size() ; i++)
 				robots.get(i).setRobotMove(false);
 			powerOneTime+=1;
+			this.powerOneCount--;
 		}
 		else{
 			powerOneTime+=deltaTime;
 			if(powerOneTime>=4){
 				for (int i = 0; i< robots.size() ; i++)
 					robots.get(i).setRobotMove(true);
-				powerOne = false;
-				
+				this.powerOne = false;
+				this.powerOneTime=0;
 			}
 		}
 	}
@@ -227,6 +242,7 @@ public class Level {
 		if(powerTwoTime==0){
 			this.gameRespawn= false;
 			powerTwoTime+=1;
+			this.powerTwoCount--;
 		}
 		else{
 			powerTwoTime+= deltaTime;
@@ -238,9 +254,12 @@ public class Level {
 	}
 	
 	public void powerThree(float deltaTime){
-		powerTwoTime+= deltaTime;
-		if(powerTwoTime>=3){
+		if(powerThreeTime == 0)
+			this.powerThreeCount--;
+		powerThreeTime+= deltaTime;
+		if(powerThreeTime>=3){
 			this.powerThree=false;
+			this.powerThreeTime = 0;
 		}
 	}
 	
@@ -331,6 +350,7 @@ public class Level {
 	}
 	
 	public void robotTeleport(int numberRobot){
+		powerUp(robots.get(numberRobot).getPower());
 		robots.remove(numberRobot);
 		countLevelRobots++;
 		this.gameTeleport = false;
@@ -377,6 +397,26 @@ public class Level {
 		System.out.println("dividerRank = "+dividerRank+"   Level = "+Level);
 		System.out.println("minRankDelay = "+minRankDelay+"  maxRankDelay = "+maxRankDelay+"   RankDelay = "+RankDelay);
 		gameRespawn = true;
+	}
+	
+	public void powerUp(int var){
+		if(var<=3)
+		switch (var) {
+		case 1:
+			System.out.println("1"+var);
+			this.powerOneCount++;
+			break;
+		case 2:
+			System.out.println("2"+var);
+			this.powerTwoCount++;
+			break;
+		case 3:
+			System.out.println("3"+var);
+			this.powerThreeCount++;
+			break;
+		default:
+			break;
+		}
 	}
 	
 	public void setPowerOne(boolean var){

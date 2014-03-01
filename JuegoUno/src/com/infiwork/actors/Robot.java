@@ -31,6 +31,11 @@ public class Robot {
 	private boolean robotAlert = false;
 	private boolean robotTeleported = false;
 	
+	private boolean robotPower = false;
+	private int power;
+	private String powerTextureName;
+	private Texture powerTexture;
+	
 	private float deltaTime;
 	private float timeFrames = 0;
 	private Vector3 position, origin;
@@ -61,11 +66,13 @@ public class Robot {
 		touchRobot = manager.get("audio/robot_jump.ogg");
 		alertExplosion = manager.get("audio/button.ogg");
 		
-		
 		origin = new Vector3(spriteWidth/2,spriteHeight/2,0);
 		position = new Vector3(x+origin.x,y+origin.y,0);
-	
-		setColor(color);
+		
+		this.setPower();
+		if(robotPower)
+		powerTexture = manager.get(this.getPowerTextureName());
+		this.setColor(color);
 		createRunAnimation(manager.get(getTextureName(), Texture.class));
 		
 		alertTexture = manager.get("alert.png");
@@ -222,6 +229,18 @@ public class Robot {
 		return position;
 	}
 	
+	public int getPower(){
+		return power;
+	}
+	
+	public Texture getPowerTexture(){
+		return powerTexture;
+	}
+	
+	private String getPowerTextureName(){
+		return powerTextureName;
+	}
+	
 	public boolean getRobotAlert(){
 		return robotAlert;
 	}
@@ -240,6 +259,10 @@ public class Robot {
 	
 	public boolean getRobotExplosion(){
 		return robotExplosion;
+	}
+	
+	public boolean getRobotPower(){
+		return robotPower;
 	}
 	
 	public boolean getRobotTouched(){
@@ -276,6 +299,29 @@ public class Robot {
 		}
 		else
 			return false;
+	}
+	
+	private void setPower(){
+		this.power = MathUtils.random(1, 5);
+		if(power>3)
+			this.robotPower= false;	
+		
+		else{
+			robotPower = true;
+			switch (power) {
+			case 1:
+				powerTextureName="laser.png";
+				break;
+			case 2:
+				powerTextureName="laser.png";
+				break;
+			case 3:
+				powerTextureName="laser.png";
+				break;
+			default:
+				break;
+			}
+		}
 	}
 	
 	public void setRobotAddSpeedGlobal(float speed){
