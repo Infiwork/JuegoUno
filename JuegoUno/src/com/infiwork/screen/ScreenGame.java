@@ -19,8 +19,8 @@ public class ScreenGame extends AbstractScreen{
 	private TextureRegion textReg;
 	private Texture      texturePause, textureOver, textureComplete;
 	private TextureRegion screenPause,  screenOver,  screenComplete;
-	private Texture  buttonPlay, buttonRestar, buttonPause, buttonPower1, buttonPower2;
-	private BoundingBox boxPlay, boxRestar, boxPause, boxPower1, boxPower2;
+	private Texture  buttonPlay, buttonRestar, buttonPause, buttonPower1, buttonPower2, buttonPower3;
+	private BoundingBox boxPlay, boxRestar, boxPause, boxPower1, boxPower2, boxPower3;
 	private Sprite fondo;
 	private BitmapFont text;
 	private Texture displayBar, displayBase;
@@ -60,6 +60,7 @@ public class ScreenGame extends AbstractScreen{
 			batch.draw(buttonPause, 75, 40, 5, 5);
 			batch.draw(buttonPower1, 0, 39, 10, 5);
 			batch.draw(buttonPower2, 0, 33, 10, 5);
+			batch.draw(buttonPower3, 0, 27, 10, 5);
 			text.draw(batch, " "+level.getPercentLevelRobots()+"%", 55, 42);
 			text.draw(batch, "Level:"+level.getLevel(), 10, 42);
 			if(level.getGameOver()){
@@ -77,6 +78,10 @@ public class ScreenGame extends AbstractScreen{
 				}
 				if(boxPower2.contains(touchpoint)){
 					level.setPowerTwo(true);
+				}
+				if(boxPower3.contains(touchpoint)){
+					level.setPowerThree(true);
+					System.out.println("tres");
 				}
 			}
 			break;
@@ -165,6 +170,8 @@ public class ScreenGame extends AbstractScreen{
 		boxPower1 = new BoundingBox(new Vector3(0,39,0), new Vector3(10, 44,0));
 		buttonPower2 = game.manager.get("boton_2.png");
 		boxPower2 = new BoundingBox(new Vector3(0,33,0), new Vector3(10, 38,0));
+		buttonPower3 = game.manager.get("boton_3.png");
+		boxPower3 = new BoundingBox(new Vector3(0,27,0), new Vector3(10, 32,0));
 		fondo = new Sprite(textReg);
 		displayBar = game.manager.get("barra.png");
 		displayBase = game.manager.get("base.png");

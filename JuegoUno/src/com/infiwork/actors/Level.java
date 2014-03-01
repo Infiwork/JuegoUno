@@ -43,6 +43,8 @@ public class Level {
 	public float powerOneTime = 0;
 	public boolean powerTwo = false;
 	public float powerTwoTime = 0;
+	public boolean powerThree = false;
+	public float powerThreeTime = 0;
 	//Robots 
 	public int robotExploited;
 	public int robotTeleport;
@@ -147,6 +149,7 @@ public class Level {
 		if(gameExplosion) robotExplosion();
 		if(powerOne) powerOne(deltaTime);
 		if(powerTwo) powerTwo(deltaTime);
+		if(powerThree) powerThree(deltaTime);
 		//time_end = System.currentTimeMillis();
 	    //System.out.println("Tiempo total "+ ( time_end - time_start ) +" milliseconds");
 	}
@@ -234,6 +237,13 @@ public class Level {
 		}
 	}
 	
+	public void powerThree(float deltaTime){
+		powerTwoTime+= deltaTime;
+		if(powerTwoTime>=3){
+			this.powerThree=false;
+		}
+	}
+	
 	public void respawnCore(float deltaTime){
 		float tempMinRankDelay;
 		float tempMaxRankDelay;
@@ -290,8 +300,14 @@ public class Level {
 				 x=temp;
 			 }
 		 }
-		 robots.get(x).setRobotElected(true);
-		 robots.get(x).soundSelectRobot();
+		 if(powerThree){
+			this.gameTeleport = true;
+			this.robotTeleport = x;
+		 }
+		 else{
+			 robots.get(x).setRobotElected(true);
+			 robots.get(x).soundSelectRobot();
+		 }
 	}
 	
 	public void robotExplosion(){
@@ -299,7 +315,7 @@ public class Level {
 			int i = robotsExploited.pop();
 			robots.remove(i);
 		}
-		soundExplosionRobot();
+		this.soundExplosionRobot();
 		this.gameExplosion = false;
 		this.gameRespawn = false;
 		if(robots.isEmpty())
@@ -369,6 +385,10 @@ public class Level {
 	
 	public void setPowerTwo(boolean var){
 		this.powerTwo = true;
+	}
+	
+	public void setPowerThree(boolean var){
+		this.powerThree = true;
 	}
 	
 	public void soundExplosionRobot(){
