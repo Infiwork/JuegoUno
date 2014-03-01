@@ -36,6 +36,13 @@ public class Level {
 	public boolean gameRobotsCreate = true;
 	public boolean gameRobotsRender = true;
 	public boolean gameRespawn = true;
+	public boolean gameRobotsSetSpeed = true;
+	public float gameRobotIncrementSpeed = 0;
+	//Powers
+	public boolean powerOne = false;
+	public float powerOneTime = 0;
+	public boolean powerTwo = false;
+	public float powerTwoTime = 0;
 	//Robots 
 	public int robotExploited;
 	public int robotTeleport;
@@ -43,13 +50,14 @@ public class Level {
 	public int countLevelRobots = 0;
 	public int countInternalLevelRobots = 0;
 	private float decimalLevelComplete = 0;
+	private float dividerRank = 512;
 	private float maxRankDelay = 0;
 	private float RankDelay = 100;
 	private float minRankDelay = 556;
-	public int totalLevelRobots = 0;
-	private float timeSpanRespawn = 0;
 	private int percentLevelComplete = 0;
 	private int positionRespawn;
+	public int totalLevelRobots = 0;
+	private float timeSpanRespawn = 0;
 	private float tempRespawnTime = 0;
 	//Constantes
 	private int COLOR_BLUE = 1;
@@ -58,8 +66,8 @@ public class Level {
 	private int POS_BOTTOM = 2;
 	
 	//Assets
-	AssetManager manager;
-	Music backgroundGame;
+	private AssetManager manager;
+	private Music backgroundGame;
 	private Sound destroyRobot;
 	
 	public Level(AssetManager manager){
@@ -82,7 +90,7 @@ public class Level {
         tele1.getSprite().draw(batch);
 		tele2.getSprite().draw(batch);
 		
-		if(countLevelRobots==totalLevelRobots)nextLevel();
+		if(countLevelRobots==totalLevelRobots) nextLevel();
 		if(gameRespawn) respawnCore(deltaTime);
 		
 		 for (int i = 0; i< robots.size() ; i++){
@@ -129,6 +137,7 @@ public class Level {
 					gameExplosion = true;
 					robotExploited = robotsExploited.push(i);;
 				}
+				
 		 }
 	
 		 //Se ejecuta solo si existe un grupo de robots seleccionados
@@ -136,23 +145,110 @@ public class Level {
 		
 		if(gameTeleport) robotTeleport(robotTeleport);
 		if(gameExplosion) robotExplosion();
+		if(powerOne) powerOne(deltaTime);
+		if(powerTwo) powerTwo(deltaTime);
 		//time_end = System.currentTimeMillis();
-	      // System.out.println("Tiempo total "+ ( time_end - time_start ) +" milliseconds");
+	    //System.out.println("Tiempo total "+ ( time_end - time_start ) +" milliseconds");
+	}
+	
+	
+	public void dispose(){
+		for (int i = 0; i< robots.size() ; i++){
+			robots.get(i).disposeAssets();
+		}
+		robots.clear();
+		selectedTemp.clear();
+		backgroundGame.dispose();
+	}
+	
+	public int getCountLevelRobts(){
+		return this.countLevelRobots;
+	}
+	
+	public float getDecimalLevelRobots(){
+		this.decimalLevelComplete = (float) countLevelRobots/totalLevelRobots;
+		return decimalLevelComplete;
+	}
+	
+	public boolean getGameOver(){
+		return this.GameOver;
+	}
+	
+	public int getLevel(){
+		return this.Level;
+	}
+	
+	public int getTotalLevelRobots(){
+		return this.totalLevelRobots;
+	}
+	
+	public int getPercentLevelRobots(){
+		this.percentLevelComplete = (100*countLevelRobots)/totalLevelRobots;
+		return percentLevelComplete;
+	}
+	
+	private int getPositionRespawnRobots(int value){
+		int position = 0;
+		switch (value) {
+		case 1:
+			position = 40;
+			break;
+		case 2:
+			position = -10;
+			break;
+		default:
+			position = 40;
+			break;
+		}
+		return position;
+	}
+	
+	public void powerOne(float deltaTime){
+		if(powerOneTime == 0){
+			for (int i = 0; i< robots.size() ; i++)
+				robots.get(i).setRobotMove(false);
+			powerOneTime+=1;
+		}
+		else{
+			powerOneTime+=deltaTime;
+			if(powerOneTime>=4){
+				for (int i = 0; i< robots.size() ; i++)
+					robots.get(i).setRobotMove(true);
+				powerOne = false;
+				
+			}
+		}
+	}
+	
+	public void powerTwo(float deltaTime){
+		if(powerTwoTime==0){
+			this.gameRespawn= false;
+			powerTwoTime+=1;
+		}
+		else{
+			powerTwoTime+= deltaTime;
+			if(powerTwoTime>=4){
+				this.gameRespawn = true;
+				this.powerTwo=false;
+			}
+		}
 	}
 	
 	public void respawnCore(float deltaTime){
 		float tempMinRankDelay;
 		float tempMaxRankDelay;
-		tempRespawnTime += deltaTime;
+		
+		this.tempRespawnTime += deltaTime;
+		
 		if(tempRespawnTime >= timeSpanRespawn){
 			countInternalLevelRobots++;
-			tempRespawnTime = 0;
-			respawnRobots();
+			this.tempRespawnTime = 0;
+			this.respawnRobots();
 			tempMaxRankDelay = maxRankDelay;
 			if(percentLevelComplete>=75)
 				tempMaxRankDelay = minRankDelay + 5;
-			timeSpanRespawn = ((MathUtils.random(minRankDelay, tempMaxRankDelay))*.01f);
-			System.out.println("minRankDelay = "+minRankDelay+"  maxRankDelay = "+tempMaxRankDelay+"   tiem = "+timeSpanRespawn);
+			this.timeSpanRespawn = ((MathUtils.random(minRankDelay, tempMaxRankDelay))*.01f);
+			//System.out.println("minRankDelay = "+minRankDelay+"  maxRankDelay = "+tempMaxRankDelay+"   tiem = "+timeSpanRespawn);
 		}
 		if(countInternalLevelRobots==totalLevelRobots) {
 			gameRespawn=false;
@@ -181,6 +277,8 @@ public class Level {
 		}
 		tempColor = MathUtils.random(1, 2);
 		robot = new Robot(35, positionRespawn ,MathUtils.random(tempMinAng, tempMaxAng), tempColor ,manager);
+		if(gameRobotsSetSpeed) 
+			robot.setRobotAddSpeedGlobal(gameRobotIncrementSpeed);
 		robots.add(robot);
 	}
 	
@@ -208,8 +306,6 @@ public class Level {
 			this.GameOver=true;
 		else
 			robotsExplosion();
-		
-
 	}
 	
 	public void robotsExplosion(){
@@ -237,13 +333,13 @@ public class Level {
 	public void musicBackgroundPauseOff(){
 		backgroundGame.setVolume(1);
 	}
-	private float dividerRank = 512;
+	
 	public void nextLevel(){
 		Level++;
 		totalLevelRobots = 4 + (Level*Level);
 		countLevelRobots = 0;
 		countInternalLevelRobots = 0;
-		timeSpanRespawn = 5;
+		timeSpanRespawn = 2.5f;
 		if(RankDelay > 40){
 			RankDelay -= 10;
 		}
@@ -254,61 +350,25 @@ public class Level {
 			minRankDelay = minRankDelay - dividerRank;
 			maxRankDelay = minRankDelay + RankDelay;
 		}
+		if(gameRobotIncrementSpeed < 3){	
+			gameRobotIncrementSpeed += .5f;
+			System.out.println(gameRobotIncrementSpeed);
+		}
+		else{
+			gameRobotsSetSpeed = false;
+		}
 		System.out.println();
 		System.out.println("dividerRank = "+dividerRank+"   Level = "+Level);
 		System.out.println("minRankDelay = "+minRankDelay+"  maxRankDelay = "+maxRankDelay+"   RankDelay = "+RankDelay);
 		gameRespawn = true;
 	}
 	
-	public void dispose(){
-		for (int i = 0; i< robots.size() ; i++){
-			robots.get(i).disposeAssets();
-		}
-		robots.clear();
-		selectedTemp.clear();
-		backgroundGame.dispose();
+	public void setPowerOne(boolean var){
+		this.powerOne = true;
 	}
 	
-	public float getDecimalLevelRobots(){
-		this.decimalLevelComplete = (float) countLevelRobots/totalLevelRobots;
-		return decimalLevelComplete;
-	}
-	
-	public boolean getGameOver(){
-		return this.GameOver;
-	}
-	
-	public int getLevel(){
-		return this.Level;
-	}
-	
-	public int getCountLevelRobts(){
-		return this.countLevelRobots;
-	}
-	
-	public int getTotalLevelRobots(){
-		return this.totalLevelRobots;
-	}
-	
-	public int getPercentLevelRobots(){
-		this.percentLevelComplete = (100*countLevelRobots)/totalLevelRobots;
-		return percentLevelComplete;
-	}
-	
-	private int getPositionRespawnRobots(int value){
-		int position = 0;
-		switch (value) {
-		case 1:
-			position = 40;
-			break;
-		case 2:
-			position = -10;
-			break;
-		default:
-			position = 40;
-			break;
-		}
-		return position;
+	public void setPowerTwo(boolean var){
+		this.powerTwo = true;
 	}
 	
 	public void soundExplosionRobot(){

@@ -16,13 +16,15 @@ public class Robot {
 	private float spriteWidth = 10, spriteHeight = 10;
 	private float countDown = 10;
 	private float countTemp = 0;
-	private float worldWidthStart=10, worldWidthEnd=70; 
+	private float worldWidthStart=10, worldWidthEnd=70;
+	private float worldHeightStart=0, worldHeightEnd=38;
 	private float worldWidth=80, worldHeight=38;
 	private int color;
 	private boolean robotCreated = false;
 	private boolean robotTouched = false;
 	private boolean robotElected = false;
 	private boolean robotDropped = false;
+	private boolean robotMove = true;
 	private boolean switchDropped= false;
 	private boolean robotExplosion = false;
 	private boolean robotDestroy = false;
@@ -52,6 +54,7 @@ public class Robot {
 		//propiedades robot
 		
 		this.x = x; this.y = y;
+		this.rotation = rotation;
 		setSpeedX(rotation, speedGlobal);
 		setSpeedY(rotation, speedGlobal);
 		
@@ -109,7 +112,6 @@ public class Robot {
 	}
 	
 	public void run(){
-		deltaTime = Gdx.graphics.getDeltaTime();
 		// Choque en eje X
 		if((position.x >= worldWidth||position.x < 0)){
 			speedX*=-1;
@@ -124,16 +126,22 @@ public class Robot {
 			
 		}
 		else{ // ESTADO 2 - Caminar
-			position.y+=(speedY*deltaTime);
-			position.x+=(speedX*deltaTime);
-			
-			if(!robotExplosion)
-			explosionCountDown(deltaTime);
-			
-			timeFrames += (deltaTime/8);
-			runFrame = runAnimation.getKeyFrame(timeFrames,true);
+			if(robotMove)
+			this.move();
 		}
 	
+	}
+	
+	private void move(){
+		deltaTime = Gdx.graphics.getDeltaTime();
+		position.y+=(speedY*deltaTime);
+		position.x+=(speedX*deltaTime);
+		
+		if(!robotExplosion)
+		explosionCountDown(deltaTime);
+		
+		timeFrames += (deltaTime/8);
+		runFrame = runAnimation.getKeyFrame(timeFrames,true);
 	}
 	
 	private void enterToWorld(){
@@ -188,7 +196,6 @@ public class Robot {
 		if(countDown<=5){ // Estado de alerta 
 			//System.out.println("if countTemp "+countTemp+" > counDown "+ countDown + " /diez " + (countDown));
 			if(countTemp > (countDown/5)){
-				//System.out.println("sonido");
 				soundAlertExplosion();
 				this.robotAlert = true;
 				countTemp=-.2f;
@@ -239,12 +246,20 @@ public class Robot {
 		return robotTouched;
 	}
 	
+	public float getRobotSpeedGlobal(){
+		return speedGlobal;
+	}
+	
 	public float getRotation(){
 		return rotation;
 	}
 	
 	private String getTextureName(){
 		return textureName;
+	}
+	
+	public float getSpeedX(){
+		return speedX;
 	}
 	
 	public float getX(){
@@ -261,6 +276,14 @@ public class Robot {
 		}
 		else
 			return false;
+	}
+	
+	public void setRobotAddSpeedGlobal(float speed){
+		//System.out.println("sx "+speedX+" sy "+speedY+"   sp  "+speed);
+		speedGlobal+=speed;
+		setSpeedX(rotation, speedGlobal);
+		setSpeedY(rotation, speedGlobal);
+		//System.out.println("sx "+speedX+" sy "+speedY);
 	}
 	
 	public void setRobotAlert(boolean robotAlert){
@@ -281,6 +304,10 @@ public class Robot {
 	
 	public void setRobotExplosion(boolean robotExplosion){
 		this.robotExplosion = robotExplosion;
+	}
+	
+	public void setRobotMove(boolean robotMove){
+		this.robotMove = robotMove;
 	}
 	
 	public void setRobotTouched(boolean robotTouched){

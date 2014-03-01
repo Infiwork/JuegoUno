@@ -14,25 +14,17 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
 public class ScreenGame extends AbstractScreen{
-	Vector3 touchpoint;
-	Texture textfondo;
-	TextureRegion textReg;
-	Texture texturePause;
-	TextureRegion screenPause;
-	Texture textureOver;
-	TextureRegion screenOver;
-	Texture textureComplete;
-	TextureRegion screenComplete;
-	Texture buttonPlay;
-	BoundingBox boxPlay;
-	Texture buttonRestar;
-	BoundingBox boxRestar;
-	Texture buttonPause;
-	BoundingBox boxPause;
-	Sprite fondo;
-	BitmapFont text;
-	Texture displayBar, displayBase;
-	Level level;
+	private Vector3 touchpoint;
+	private Texture textfondo;
+	private TextureRegion textReg;
+	private Texture      texturePause, textureOver, textureComplete;
+	private TextureRegion screenPause,  screenOver,  screenComplete;
+	private Texture  buttonPlay, buttonRestar, buttonPause, buttonPower1, buttonPower2;
+	private BoundingBox boxPlay, boxRestar, boxPause, boxPower1, boxPower2;
+	private Sprite fondo;
+	private BitmapFont text;
+	private Texture displayBar, displayBase;
+	private Level level;
 	
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
@@ -58,7 +50,6 @@ public class ScreenGame extends AbstractScreen{
 		batch.setProjectionMatrix(camera.combined);
 		batch.enableBlending();
 		batch.begin();
-		
 		//long time_start, time_end;
         //time_start = System.currentTimeMillis();
 		switch (GAME_STATE) {
@@ -67,6 +58,8 @@ public class ScreenGame extends AbstractScreen{
 			fondo.draw(batch);
 			level.render(camera, batch);
 			batch.draw(buttonPause, 75, 40, 5, 5);
+			batch.draw(buttonPower1, 0, 39, 10, 5);
+			batch.draw(buttonPower2, 0, 33, 10, 5);
 			text.draw(batch, " "+level.getPercentLevelRobots()+"%", 55, 42);
 			text.draw(batch, "Level:"+level.getLevel(), 10, 42);
 			if(level.getGameOver()){
@@ -78,6 +71,12 @@ public class ScreenGame extends AbstractScreen{
 				if(boxPause.contains(touchpoint)) {
 					level.musicBackgroundPauseOn();
 					GAME_STATE = GAME_PAUSE;
+				}
+				if(boxPower1.contains(touchpoint)){
+					level.setPowerOne(true);
+				}
+				if(boxPower2.contains(touchpoint)){
+					level.setPowerTwo(true);
 				}
 			}
 			break;
@@ -148,7 +147,6 @@ public class ScreenGame extends AbstractScreen{
 		batch = new SpriteBatch();
 		
 		level = new Level(game.manager);
-		System.out.println("hola1");
 		textfondo = game.manager.get("escenario.png");
 		textReg =  new TextureRegion(textfondo, 1024, 700);
 		texturePause = game.manager.get("pause_screen.png");
@@ -163,19 +161,16 @@ public class ScreenGame extends AbstractScreen{
 		boxRestar = new BoundingBox(new Vector3(37,20,0), new Vector3(43, 25,0));
 		buttonPause = game.manager.get("button_pause.png");
 		boxPause = new BoundingBox(new Vector3(75,40,0), new Vector3(80, 45,0));
+		buttonPower1 = game.manager.get("boton_1.png");
+		boxPower1 = new BoundingBox(new Vector3(0,39,0), new Vector3(10, 44,0));
+		buttonPower2 = game.manager.get("boton_2.png");
+		boxPower2 = new BoundingBox(new Vector3(0,33,0), new Vector3(10, 38,0));
 		fondo = new Sprite(textReg);
 		displayBar = game.manager.get("barra.png");
 		displayBase = game.manager.get("base.png");
 		touchpoint = new Vector3();
 		text = game.manager.get("arial.fnt");
 		text.setScale(.2f);
-		//TextureRegion t = new TextureRegion(game.manager.get("arial.png", Texture.class));
-		//BitmapFont b = game.manager.get("arial.fnt",BitmapFont.class);		
-		
-		
-		
-		System.out.println("hola2");
-		
 	}
 
 	@Override
