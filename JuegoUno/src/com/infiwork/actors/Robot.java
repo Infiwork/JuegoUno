@@ -302,7 +302,7 @@ public class Robot {
 	}
 	
 	private void setPower(){
-		this.power = MathUtils.random(1, 5);
+		this.power = MathUtils.random(1, 30);
 		if(power>3)
 			this.robotPower= false;	
 		

@@ -10,6 +10,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.infiwork.game.GamePreferences;
 
 public class Level {
 	
@@ -74,6 +75,9 @@ public class Level {
 	private AssetManager manager;
 	private Music backgroundGame;
 	private Sound destroyRobot;
+	private GamePreferences preferences;
+	private float volMusic;
+	private float volSound;
 	
 	public Level(AssetManager manager){
 		robots = new ArrayList<Robot>();
@@ -81,8 +85,9 @@ public class Level {
 		tele2 = new Teleport(70, 20, COLOR_BLUE, manager);
 		selectedTemp = new Stack<Integer>();
 		robotsExploited = new Stack<Integer>();
+		preferences = new GamePreferences();
 		this.manager = manager;
-		musicBackgroundGame();
+		this.musicBackgroundGame();
 		destroyRobot = manager.get("audio/ChargedSonicBoomAttack8-Bit.ogg");	
 	}
 	
@@ -246,7 +251,7 @@ public class Level {
 		}
 		else{
 			powerTwoTime+= deltaTime;
-			if(powerTwoTime>=4){
+			if(powerTwoTime>=6){
 				this.gameRespawn = true;
 				this.powerTwo=false;
 			}
@@ -358,15 +363,18 @@ public class Level {
 	
 	public void musicBackgroundGame(){
 		backgroundGame = manager.get("audio/background_game.ogg");
+		if(preferences.isMusicEnabled())
 		backgroundGame.play();
 		backgroundGame.setLooping(true);
 	}
 	
 	public void musicBackgroundPauseOn(){
+		if(preferences.isMusicEnabled())
 		backgroundGame.setVolume(.25f);
 	}
 	
 	public void musicBackgroundPauseOff(){
+		if(preferences.isMusicEnabled())
 		backgroundGame.setVolume(1);
 	}
 	

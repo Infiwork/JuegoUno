@@ -3,6 +3,8 @@ package com.infiwork.screen;
 import com.infiwork.actors.Level;
 import com.infiwork.game.JuegoUno;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -13,7 +15,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
-public class ScreenGame extends AbstractScreen{
+public class ScreenGame extends AbstractScreen implements InputProcessor{
 	private Vector3 touchpoint;
 	private Texture textfondo;
 	private TextureRegion textReg;
@@ -42,7 +44,6 @@ public class ScreenGame extends AbstractScreen{
 	
 	@Override
 	public void render(float delta) {
-		
 		camera.update();
 		Gdx.gl.glClearColor( 0, 0, 0, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
@@ -153,6 +154,7 @@ public class ScreenGame extends AbstractScreen{
 		batch = new SpriteBatch();
 		
 		level = new Level(game.manager);
+		
 		textfondo = game.manager.get("escenario.png");
 		textReg =  new TextureRegion(textfondo, 1024, 700);
 		texturePause = game.manager.get("pause_screen.png");
@@ -179,6 +181,8 @@ public class ScreenGame extends AbstractScreen{
 		touchpoint = new Vector3();
 		text = game.manager.get("arial.fnt");
 		text.setScale(.2f);
+		Gdx.input.setInputProcessor(this);
+		Gdx.input.setCatchBackKey(true);
 	}
 
 	@Override
@@ -198,6 +202,64 @@ public class ScreenGame extends AbstractScreen{
         game.manager.unload("sprite_robot_verde.png");
         game.manager.dispose();
         level.dispose();
+	}
+	
+	public boolean keyDown(int keycode) {
+        if((keycode == Keys.BACK) || (keycode == Keys.ESCAPE)){
+           // Do your optional back button handling (show pause menu?)
+        	switch (GAME_STATE) {
+			case 1:
+				level.musicBackgroundPauseOn();
+				GAME_STATE = GAME_PAUSE;
+				break;
+
+			default:
+				break;
+			}
+        }
+        return false;
+   }
+
+	@Override
+	public boolean keyUp(int keycode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

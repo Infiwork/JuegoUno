@@ -13,10 +13,33 @@ public class JuegoUno extends Game {
      * Holds all our assets
      */
     public AssetManager manager = new AssetManager();
-    //public Preferences prefs = Gdx.app.getPreferences("my-preferences");
+    public float volGlobalMusic = 1;
+    public float volGlobalSound = 1;
+    public Preferences preferences;
+   
 
     @Override
     public void create() {
         setScreen(new ScreenLoading(this));
+        preferences = Gdx.app.getPreferences("pickingRobotsPreferences");
+     
+        
+        
+    }
+    
+    public float getVolGobalMusic(){
+    	return volGlobalMusic;
+    }
+    
+    public float getVolGobalSound(){
+    	return volGlobalSound;
+    }
+    
+    public void setVolGobalMusic(float vol){
+    	volGlobalMusic = vol;
+    }
+    
+    public void setVolGobalSound(float vol){
+    	volGlobalSound = vol;
     }
 }
